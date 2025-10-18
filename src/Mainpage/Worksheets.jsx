@@ -45,7 +45,7 @@ function DownloadWorksheetsSection() {
       <img
         src="/kid.png"
         alt="Student Illustration"
-        className="hidden md:block absolute right-10 bottom-0 w-72 sm:w-80 lg:w-96 object-contain translate-y-10"
+        className="absolute right-4 sm:right-10 bottom-0 w-48 sm:w-72 md:w-80 lg:w-96 object-contain translate-y-10 opacity-80 sm:opacity-100"
       />
 
       {/* Header */}

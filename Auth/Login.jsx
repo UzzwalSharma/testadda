@@ -194,6 +194,9 @@ async function handleLogin(e) {
 
      
       </div>
+        <footer className="w-full text-center py-4 absolute bottom-0 left-0 animate-pulse">
+      <p>Made with ❤️ by Ujjwal Sharma</p>
+     </footer>
     </div>
   );
 }

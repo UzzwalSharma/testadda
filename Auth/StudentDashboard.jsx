@@ -286,8 +286,8 @@ const ActivityCard = ({title, icon, items, type, color}) => {
         )) : (
           <div className="text-center py-12">
             <div className="text-6xl mb-3">📚</div>
-            <p className="text-gray-500 font-medium">No submissions yet</p>
-            <p className="text-sm text-gray-400 mt-1">Start your learning journey!</p>
+            <p className="text-gray-500 font-medium">No submissions done by Ujjwal yet!</p>
+            <p className="text-sm text-gray-400 mt-1">keep learning!</p>
           </div>
         )}
       </div>
