@@ -7,15 +7,15 @@ import TestsSection from "./Mainpage/Tests";
 import AdminPanel from "./Admin/Admin";
 import Login from "../Auth/Login";
 import StudentDashboard from "../Auth/StudentDashboard";
-import Festival from "../Festival";
+// import Festival from "../Festival";
 
 function App() {
   const [student, setStudent] = useState(null);
-  const [showFestival, setShowFestival] = useState(true); // control popup visibility
+  // const [showFestival, setShowFestival] = useState(true); // control popup visibility
 
   return (
     <>
-     <Festival isVisible={showFestival} onClose={() => setShowFestival(false)} />
+     {/* <Festival isVisible={showFestival} onClose={() => setShowFestival(false)} /> */}
 
       <Router>
         <Routes>
