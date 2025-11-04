@@ -12,6 +12,7 @@ import type * as addtest from "../addtest.js";
 import type * as addworksheet from "../addworksheet.js";
 import type * as getStudentDetails from "../getStudentDetails.js";
 import type * as login from "../login.js";
+import type * as test from "../test.js";
 import type * as worksheets from "../worksheets.js";
 
 import type {
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   addworksheet: typeof addworksheet;
   getStudentDetails: typeof getStudentDetails;
   login: typeof login;
+  test: typeof test;
   worksheets: typeof worksheets;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

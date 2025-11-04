@@ -7,6 +7,8 @@ import TestsSection from "./Mainpage/Tests";
 import AdminPanel from "./Admin/Admin";
 import Login from "../Auth/Login";
 import StudentDashboard from "../Auth/StudentDashboard";
+import ChapterWiseTest from "./Mainpage/Tests/chapterwisetests";
+import TestWindow from "./Mainpage/Tests/testwindow";
 // import Festival from "../Festival";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Route path="/start" element={<Content />} />
           <Route path="/worksheets" element={<Worksheets />} />
           <Route path="/tests" element={<TestsSection />} />
+          <Route path="/chapterwisetest" element={<ChapterWiseTest />} />
+          <Route path="/test-window" element={<TestWindow />} />
 
           <Route path="/login" element={<Login onLogin={setStudent} />} />
 

@@ -32,4 +32,15 @@ export default defineSchema({
     timelySubmission: v.boolean(),
     submittedAt: v.string(),
   }),
+   tests: defineTable({
+    title: v.string(),
+    subject: v.string(),
+    date: v.string(),
+    time: v.string(),
+    duration: v.string(),
+    totalMarks: v.string(),
+    driveLink: v.string(),
+    testType: v.string(), // "MCQ", "AI", "Chapter Wise"
+   
+  }),
 });

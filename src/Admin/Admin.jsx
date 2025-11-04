@@ -14,10 +14,9 @@ import {
 
 import toast, { Toaster } from "react-hot-toast";
 import TeacherWelcomeCard from "./Welcome";
+import TestsSection from "./TestsSection";
 
 function AdminPanel() {
-
-
   const addWorksheetSubmission = useMutation(
     api.addworksheet.addWorksheetSubmission
   );
@@ -122,7 +121,6 @@ function AdminPanel() {
     totalMarks: "",
   });
 
-  
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const mockTests = [
@@ -202,7 +200,7 @@ function AdminPanel() {
         subject: "",
         chapter: "",
         color: "from-blue-500 to-blue-600",
-       imageUrl: "",
+        imageUrl: "",
         description: "",
         driveLink: "",
         pages: "",
@@ -358,25 +356,27 @@ function AdminPanel() {
                       className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-               <div className="relative">
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Image URL
-  </label>
-  <input
-    type="text"
-    placeholder="Enter image URL (e.g. https://...)"
-    value={form.imageUrl || ""}
-    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
-  />
-  {form.imageUrl && (
-    <img
-      src={form.imageUrl}
-      alt="Preview"
-      className="mt-3 w-16 h-16 object-contain rounded-lg border border-gray-200"
-    />
-  )}
-</div>
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Image URL
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter image URL (e.g. https://...)"
+                      value={form.imageUrl || ""}
+                      onChange={(e) =>
+                        setForm({ ...form, imageUrl: e.target.value })
+                      }
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                    />
+                    {form.imageUrl && (
+                      <img
+                        src={form.imageUrl}
+                        alt="Preview"
+                        className="mt-3 w-16 h-16 object-contain rounded-lg border border-gray-200"
+                      />
+                    )}
+                  </div>
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -455,16 +455,18 @@ function AdminPanel() {
                     </select>
                   </div>
                   <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Date of Submission *
-  </label>
-  <input
-    type="date"
-    value={form.date}
-    onChange={(e) => setForm({ ...form, date: e.target.value })}
-    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-  />
-</div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Date of Submission *
+                    </label>
+                    <input
+                      type="date"
+                      value={form.date}
+                      onChange={(e) =>
+                        setForm({ ...form, date: e.target.value })
+                      }
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -577,171 +579,7 @@ function AdminPanel() {
             </div>
           )}
           {/* tests */}
-          {activeTab === "tests" && (
-            <div className="space-y-8">
-              {/* Schedule Test Form */}
-              <div className="bg-white rounded-lg p-8 border border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  Schedule Test
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Test Title *
-                    </label>
-                    <input
-                      placeholder="Mid-term Examination"
-                      value={testForm.title}
-                      onChange={(e) =>
-                        setTestForm({ ...testForm, title: e.target.value })
-                      }
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Subject
-                    </label>
-                    <input
-                      placeholder="Mathematics"
-                      value={testForm.subject}
-                      onChange={(e) =>
-                        setTestForm({ ...testForm, subject: e.target.value })
-                      }
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Date
-                    </label>
-                    <input
-                      type="date"
-                      value={testForm.date}
-                      onChange={(e) =>
-                        setTestForm({ ...testForm, date: e.target.value })
-                      }
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Time
-                    </label>
-                    <input
-                      type="time"
-                      value={testForm.time}
-                      onChange={(e) =>
-                        setTestForm({ ...testForm, time: e.target.value })
-                      }
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Duration (mins)
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="90"
-                      value={testForm.duration}
-                      onChange={(e) =>
-                        setTestForm({ ...testForm, duration: e.target.value })
-                      }
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Total Marks
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="100"
-                      value={testForm.totalMarks}
-                      onChange={(e) =>
-                        setTestForm({ ...testForm, totalMarks: e.target.value })
-                      }
-                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-                <button
-                  onClick={handleTestSubmit}
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-2"
-                >
-                  <Calendar size={18} /> Schedule Test
-                </button>
-              </div>
-
-              {/* Scheduled Tests */}
-              <div className="bg-white rounded-lg p-8 border border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">
-                  Scheduled Tests
-                </h2>
-                <div className="space-y-4">
-                  {mockTests.map((test) => (
-                    <div
-                      key={test.id}
-                      className="bg-white border border-gray-100 rounded-lg p-6 hover:shadow-sm transition-shadow"
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                            {test.title}
-                          </h3>
-                          <p className="text-gray-500 text-sm">
-                            {test.subject}
-                          </p>
-                        </div>
-                        <span
-                          className={`px-3 py-1 rounded-md text-xs font-medium ${
-                            test.status === "upcoming"
-                              ? "bg-blue-50 text-blue-700"
-                              : "bg-green-50 text-green-700"
-                          }`}
-                        >
-                          {test.status === "upcoming"
-                            ? "Upcoming"
-                            : "Completed"}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <div className="text-xs text-gray-500 mb-1">Date</div>
-                          <div className="font-medium text-gray-900 text-sm">
-                            {test.date}
-                          </div>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <div className="text-xs text-gray-500 mb-1">Time</div>
-                          <div className="font-medium text-gray-900 text-sm">
-                            {test.time}
-                          </div>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <div className="text-xs text-gray-500 mb-1">
-                            Duration
-                          </div>
-                          <div className="font-medium text-gray-900 text-sm">
-                            {test.duration} mins
-                          </div>
-                        </div>
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <div className="text-xs text-gray-500 mb-1">
-                            Enrolled
-                          </div>
-                          <div className="font-medium text-gray-900 text-sm">
-                            {test.enrolled} students
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+          {activeTab === "tests" && <TestsSection />}
 
           {/* student activity */}
 
