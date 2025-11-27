@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Hero from './Mainpage/Hero';
 import Content from './Mainpage/Content';
 import Worksheets from "./Mainpage/Worksheets";
@@ -9,15 +9,23 @@ import Login from "../Auth/Login";
 import StudentDashboard from "../Auth/StudentDashboard";
 import ChapterWiseTest from "./Mainpage/Tests/chapterwisetests";
 import TestWindow from "./Mainpage/Tests/testwindow";
+import MobileTestWindow from "./Mainpage/Tests/Mobiletestwindow";
 // import Festival from "../Festival";
 
 function App() {
   const [student, setStudent] = useState(null);
   // const [showFestival, setShowFestival] = useState(true); // control popup visibility
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
-     {/* <Festival isVisible={showFestival} onClose={() => setShowFestival(false)} /> */}
+      {/* <Festival isVisible={showFestival} onClose={() => setShowFestival(false)} /> */}
 
       <Router>
         <Routes>
@@ -27,7 +35,10 @@ function App() {
           <Route path="/worksheets" element={<Worksheets />} />
           <Route path="/tests" element={<TestsSection />} />
           <Route path="/chapterwisetest" element={<ChapterWiseTest />} />
-          <Route path="/test-window" element={<TestWindow />} />
+          <Route 
+            path="/test-window" 
+            element={screenWidth >= 1024 ? <TestWindow /> : <MobileTestWindow />} 
+          />
 
           <Route path="/login" element={<Login onLogin={setStudent} />} />
 
