@@ -21,7 +21,7 @@ function TestsSection() {
       description: "Challenge AI and prove your concept mastery",
       imageUrl: "/META.gif",
       color: "bg-purple-600 hover:bg-purple-700",
-      isLocked: true,
+      isLocked: false,
       route: "/ai-test"
     },
     {

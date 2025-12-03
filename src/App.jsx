@@ -10,6 +10,8 @@ import StudentDashboard from "../Auth/StudentDashboard";
 import ChapterWiseTest from "./Mainpage/Tests/chapterwisetests";
 import TestWindow from "./Mainpage/Tests/testwindow";
 import MobileTestWindow from "./Mainpage/Tests/Mobiletestwindow";
+import AiTestGenerator from "./Mainpage/Tests/aitest";
+import TestPage from "./Mainpage/Tests/TestPage";
 // import Festival from "../Festival";
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
           <Route path="/worksheets" element={<Worksheets />} />
           <Route path="/tests" element={<TestsSection />} />
           <Route path="/chapterwisetest" element={<ChapterWiseTest />} />
+          <Route path="/ai-test" element={<AiTestGenerator />} />
+          <Route path="/testpage" element={<TestPage />} />
           <Route 
             path="/test-window" 
             element={screenWidth >= 1024 ? <TestWindow /> : <MobileTestWindow />} 
