@@ -126,6 +126,18 @@ function TestsSection() {
           ))}
         </div>
       </div>
+
+      {/* Check Leaderboard Button */}
+      <div className="max-w-6xl mx-auto mb-12">
+        <div className="flex justify-center">
+          <button
+            className="bg-blue-700 cursor-pointer hover:bg-blue-400 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:-translate-y-1"
+            onClick={() => navigate('/leaderboard')}
+          >
+            Check Leaderboard
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
