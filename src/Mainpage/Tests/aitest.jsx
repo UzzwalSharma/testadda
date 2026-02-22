@@ -29,7 +29,7 @@ function AiTestGenerator() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://localhost:/ai-test-generator", {
+      const response = await fetch("https://tuitionserver.onrender.com/ai-test-generator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
