@@ -1,126 +1,196 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowLeft, LayoutDashboard, ClipboardList, FileText } from "lucide-react";
 
 function Content() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 16 } },
+  };
+
   return (
-    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center p-6 bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900">
-      {/* Greenboard background */}
-      <img
-        src="/content.jpeg"
-        alt="Greenboard"
-        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
+    <div className="min-h-screen bg-[#f5f4ff] relative overflow-hidden flex flex-col" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');`}</style>
+
+      {/* Grid background */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage:
+            "linear-gradient(#c7c2ff 1px, transparent 1px), linear-gradient(90deg, #c7c2ff 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
       />
-      
-      {/* Animated background elements */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/20"></div>
 
-      {/* Back Arrow */}
-      <Link 
-        to="/" 
-        className="absolute top-6 left-6 z-20 group flex items-center gap-2 bg-white/10 backdrop-blur-md hover:bg-white/20 px-4 py-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
-      >
-        <svg 
-          className="w-6 h-6 text-white group-hover:-translate-x-1 transition-transform duration-300" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span className="text-white font-semibold text-sm">Back</span>
-      </Link>
-{/* Dashboard Button - Add this after the Back Arrow Link */}
-<Link 
-  to="/login" 
-  className="absolute top-6 right-6 z-20 group flex items-center gap-2 bg-white/10 backdrop-blur-md hover:bg-white/20 px-4 py-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
->
-  <svg 
-    className="w-6 h-6 text-white" 
-    fill="none" 
-    stroke="currentColor" 
-    viewBox="0 0 24 24"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-  </svg>
-  <span className="text-white font-semibold text-sm">Dashboard</span>
-</Link>
-      {/* Overlay content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 sm:px-10 py-12 gap-6 max-w-5xl">
-        {/* Greeting with enhanced styling */}
-        <div className="space-y-4 mb-4">
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] tracking-tight animate-fade-in">
-            Hello Champ! 👋
-          </h2>
-          
-          <div className="h-1 w-24 mx-auto bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 rounded-full shadow-lg"></div>
-        </div>
-
-        <p className="text-white text-xl md:text-3xl font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] mb-4">
-          Choose what you want to do today 🎯
-        </p>
-
-        {/* Buttons container with enhanced layout */}
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 mt-8">
-          {/* Tests Button */}
-          <Link to="/tests" className="relative group transform transition-all duration-300 hover:scale-105 hover:-translate-y-2">
-            <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl blur-xl opacity-0 group-hover:opacity-75 transition-opacity duration-500"></div>
-            <div className="relative">
-              <img
-                src="/btn.png"
-                alt="Brush Button Background"
-                className="w-72 md:w-80 lg:w-96 select-none pointer-events-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)] transition-transform duration-300 group-hover:drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]"
-              />
-              <span className="absolute inset-0 flex items-center justify-center font-black text-xl md:text-3xl text-black drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)] transition-all duration-300 group-hover:text-gray-900">
-                Give Tests
-              </span>
-            </div>
-          </Link>
-
-          {/* Worksheets Button */}
-          <Link to="/worksheets" className="relative group transform transition-all duration-300 hover:scale-105 hover:-translate-y-2">
-            <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur-xl opacity-0 group-hover:opacity-75 transition-opacity duration-500"></div>
-            <div className="relative">
-              <img
-                src="/btn.png"
-                alt="Brush Button Background"
-                className="w-72 md:w-80 lg:w-96 select-none pointer-events-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.4)] transition-transform duration-300 group-hover:drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]"
-              />
-              <span className="absolute inset-0 flex items-center justify-center font-black text-xl md:text-3xl text-black drop-shadow-[0_2px_4px_rgba(255,255,255,0.3)] transition-all duration-300 group-hover:text-gray-900">
-                Solve Worksheets
-              </span>
-            </div>
-          </Link>
-        </div>
-
-        {/* Decorative elements */}
-        <div className="mt-8 flex gap-2 opacity-60">
-          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-          <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse delay-75"></div>
-          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-150"></div>
-        </div>
+      {/* Animated blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, #a5b4fc44, transparent 70%)" }}
+          animate={{ scale: [1, 1.08, 1], x: [0, 24, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, #f9a8d433, transparent 70%)" }}
+          animate={{ scale: [1, 1.1, 1], y: [0, -24, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+        <motion.div
+          className="absolute -bottom-40 left-1/3 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, #6ee7b733, transparent 70%)" }}
+          animate={{ scale: [1, 1.06, 1], x: [0, -20, 0] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        />
       </div>
 
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out;
-        }
-        .delay-75 {
-          animation-delay: 75ms;
-        }
-        .delay-150 {
-          animation-delay: 150ms;
-        }
-      `}</style>
+      {/* HEADER */}
+      <motion.header
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 120, damping: 20 }}
+        className="relative z-30 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm"
+      >
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <motion.div whileHover={{ x: -3 }} whileTap={{ scale: 0.96 }}>
+            <Link
+              to="/"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Link>
+          </motion.div>
+
+          <span
+            className="text-lg font-extrabold text-gray-900 tracking-tight"
+            style={{ fontFamily: "'Syne', sans-serif" }}
+          >
+            Tuition adda
+          </span>
+
+          <motion.div whileHover={{ x: 3 }} whileTap={{ scale: 0.96 }}>
+            <Link
+              to="/login"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              Dashboard
+            </Link>
+          </motion.div>
+        </div>
+      </motion.header>
+
+      {/* MAIN */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-16">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="w-full max-w-3xl flex flex-col items-center text-center"
+        >
+          {/* Greeting */}
+          <motion.div variants={itemVariants} className="mb-10">
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-xl shadow-indigo-200 mb-6 text-4xl"
+            >
+              👋
+            </motion.div>
+
+            <h1
+              className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-4"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
+              Hello,{" "}
+              <span className="bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text text-transparent">
+                Champ!
+              </span>
+            </h1>
+
+            <p className="text-gray-500 text-lg font-medium">
+              What would you like to do today? 🎯
+            </p>
+          </motion.div>
+
+          {/* Action Cards */}
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full max-w-2xl"
+          >
+            {/* Tests Card */}
+            <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link to="/tests" className="block">
+                <div className="group bg-white rounded-3xl shadow-lg shadow-indigo-100/50 border border-white p-8 flex flex-col items-center gap-5 hover:shadow-xl hover:shadow-indigo-200/60 transition-shadow duration-300">
+                  {/* Icon */}
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-md shadow-indigo-200 flex items-center justify-center">
+                    <ClipboardList className="w-8 h-8 text-white" />
+                  </div>
+
+                  <div>
+                    <h2
+                      className="text-xl font-extrabold text-gray-900 mb-1"
+                      style={{ fontFamily: "'Syne', sans-serif" }}
+                    >
+                      Give Tests
+                    </h2>
+                    <p className="text-gray-400 text-sm font-medium">
+                      Challenge yourself with AI-powered tests
+                    </p>
+                  </div>
+
+                  <div className="w-full py-3 rounded-2xl text-white text-sm font-bold flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-violet-600 shadow-md shadow-indigo-200 group-hover:shadow-lg group-hover:shadow-indigo-300 transition-shadow">
+                    Start Now →
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Worksheets Card */}
+            <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link to="/worksheets" className="block">
+                <div className="group bg-white rounded-3xl shadow-lg shadow-pink-100/50 border border-white p-8 flex flex-col items-center gap-5 hover:shadow-xl hover:shadow-pink-200/60 transition-shadow duration-300">
+                  {/* Icon */}
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 shadow-md shadow-pink-200 flex items-center justify-center">
+                    <FileText className="w-8 h-8 text-white" />
+                  </div>
+
+                  <div>
+                    <h2
+                      className="text-xl font-extrabold text-gray-900 mb-1"
+                      style={{ fontFamily: "'Syne', sans-serif" }}
+                    >
+                      Solve Worksheets
+                    </h2>
+                    <p className="text-gray-400 text-sm font-medium">
+                      Practice at your own pace with worksheets
+                    </p>
+                  </div>
+
+                  <div className="w-full py-3 rounded-2xl text-white text-sm font-bold flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 shadow-md shadow-pink-200 group-hover:shadow-lg group-hover:shadow-pink-300 transition-shadow">
+                    Start Now →
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          {/* Footer note */}
+          <motion.p
+            variants={itemVariants}
+            className="mt-12 text-sm text-gray-400 font-medium"
+          >
+            ✨ Every session brings you closer to your goal!
+          </motion.p>
+        </motion.div>
+      </div>
     </div>
   );
 }

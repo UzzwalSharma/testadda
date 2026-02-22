@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Clock,
   Download,
   CheckCircle,
   AlertCircle,
+  X,
+  ArrowLeft,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -65,17 +67,12 @@ function TestPage() {
 
   useEffect(() => {
     if (isSubmitted || isTimeUp) return;
-
     const interval = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          setIsTimeUp(true);
-          return 0;
-        }
+      setTimeRemaining((prev) => {
+        if (prev <= 1) { setIsTimeUp(true); return 0; }
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(interval);
   }, [isSubmitted, isTimeUp]);
 
@@ -85,30 +82,32 @@ function TestPage() {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const timerColor =
+    timeRemaining < 60
+      ? { bg: "bg-red-50", border: "border-red-300", text: "text-red-600" }
+      : timeRemaining < 300
+      ? { bg: "bg-orange-50", border: "border-orange-300", text: "text-orange-600" }
+      : { bg: "bg-emerald-50", border: "border-emerald-300", text: "text-emerald-600" };
+
   const downloadAsPDF = async () => {
     const element = document.getElementById("test-content");
 
     const loadingDiv = document.createElement("div");
-    loadingDiv.className = "fixed inset-0 z-[101] flex items-center justify-center bg-black/20";
+    loadingDiv.className = "fixed inset-0 z-[101] flex items-center justify-center bg-black/30 backdrop-blur-sm";
     loadingDiv.innerHTML = `
-      <div style="background: white; padding: 40px 60px; border-radius: 12px; 
-                  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-                  text-align: center; border: 2px solid #3B82F6;">
-        <div style="font-size: 28px; font-weight: 700; color: #1F2937; margin-bottom: 12px;">
-          Creating Your PDF...
+      <div style="background: white; padding: 40px 60px; border-radius: 20px;
+                  box-shadow: 0 30px 80px rgba(99,102,241,0.2); text-align: center; border: 2px solid #e0e7ff;">
+        <div style="font-size: 24px; font-weight: 800; color: #1e1b4b; margin-bottom: 8px; font-family: 'Syne', sans-serif;">
+          Creating your PDF...
         </div>
-        <div style="color: #6B7280; font-size: 16px; font-weight: 600;">
-          Please wait a moment
-        </div>
+        <div style="color: #6b7280; font-size: 14px; font-weight: 500;">Please wait a moment ✨</div>
       </div>
     `;
     document.body.appendChild(loadingDiv);
 
     try {
       const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
+        scale: 2, useCORS: true, logging: false,
         backgroundColor: "#ffffff",
         windowWidth: element.scrollWidth,
         windowHeight: element.scrollHeight,
@@ -116,7 +115,6 @@ function TestPage() {
 
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
-
       const imgWidth = 210;
       const pageHeight = 297;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -125,7 +123,6 @@ function TestPage() {
 
       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
-
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
@@ -138,40 +135,25 @@ function TestPage() {
 
       setTimeout(() => {
         loadingDiv.innerHTML = `
-          <div style="background: white; padding: 40px 60px; border-radius: 12px; 
-                      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-                      text-align: center; border: 2px solid #22C55E;">
-            <div style="font-size: 40px; margin-bottom: 12px;">✓</div>
-            <div style="font-size: 24px; font-weight: 700; color: #22C55E; margin-bottom: 8px;">
-              PDF Downloaded!
-            </div>
-            <div style="color: #6B7280; font-size: 14px; font-weight: 600;">
-              Check your downloads folder
-            </div>
+          <div style="background: white; padding: 40px 60px; border-radius: 20px;
+                      box-shadow: 0 30px 80px rgba(34,197,94,0.15); text-align: center; border: 2px solid #bbf7d0;">
+            <div style="font-size: 36px; margin-bottom: 10px;">✓</div>
+            <div style="font-size: 20px; font-weight: 800; color: #16a34a; margin-bottom: 6px;">PDF Downloaded!</div>
+            <div style="color: #6b7280; font-size: 13px;">Check your downloads folder</div>
           </div>
         `;
-        setTimeout(() => {
-          document.body.removeChild(loadingDiv);
-        }, 2000);
+        setTimeout(() => document.body.removeChild(loadingDiv), 2000);
       }, 500);
     } catch (err) {
-      console.error("PDF Error:", err);
       loadingDiv.innerHTML = `
-        <div style="background: white; padding: 40px 60px; border-radius: 12px; 
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-                    text-align: center; border: 2px solid #EF4444;">
-          <div style="font-size: 40px; margin-bottom: 12px;">✕</div>
-          <div style="font-size: 24px; font-weight: 700; color: #EF4444; margin-bottom: 8px;">
-            Something went wrong
-          </div>
-          <div style="color: #6B7280; font-size: 14px; font-weight: 600;">
-            Please try again
-          </div>
+        <div style="background: white; padding: 40px 60px; border-radius: 20px;
+                    box-shadow: 0 30px 80px rgba(239,68,68,0.15); text-align: center; border: 2px solid #fecaca;">
+          <div style="font-size: 36px; margin-bottom: 10px;">✕</div>
+          <div style="font-size: 20px; font-weight: 800; color: #dc2626; margin-bottom: 6px;">Something went wrong</div>
+          <div style="color: #6b7280; font-size: 13px;">Please try again</div>
         </div>
       `;
-      setTimeout(() => {
-        document.body.removeChild(loadingDiv);
-      }, 3000);
+      setTimeout(() => document.body.removeChild(loadingDiv), 3000);
     }
   };
 
@@ -184,237 +166,302 @@ function TestPage() {
 
   if (testData.subject === "Loading...") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">📄</div>
-          <div className="text-xl font-semibold text-gray-700">Loading test paper...</div>
-        </div>
+      <div className="min-h-screen bg-[#f5f4ff] flex items-center justify-center">
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');`}</style>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            className="w-12 h-12 rounded-full border-4 border-indigo-200 border-t-indigo-500 mx-auto mb-4"
+          />
+          <p className="text-gray-500 font-semibold">Loading your test paper...</p>
+        </motion.div>
       </div>
     );
   }
 
+  const totalSeconds = testData.duration * 60;
+  const progressPercent = totalSeconds > 0 ? (timeRemaining / totalSeconds) * 100 : 0;
+
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-white shadow-md border-b-2 border-blue-500">
+    <div className="min-h-screen bg-[#f5f4ff]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap');
+        .prose-test h1, .prose-test h2, .prose-test h3 { font-family: 'Syne', sans-serif; }
+        .prose-test h3 {
+          font-size: 1.1rem; font-weight: 800; color: #3730a3;
+          background: #eef2ff; padding: 10px 16px; border-radius: 10px;
+          border-left: 4px solid #6366f1; margin-top: 2rem; margin-bottom: 1rem;
+        }
+        .prose-test p { color: #374151; line-height: 1.8; margin-bottom: 1rem; font-size: 0.95rem; }
+        .prose-test strong { color: #1e1b4b; font-weight: 700; }
+        .prose-test li { color: #374151; margin-bottom: 0.4rem; font-size: 0.95rem; }
+        .prose-test ol, .prose-test ul { padding-left: 1.5rem; }
+      `}</style>
+
+      {/* Subtle grid background */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage: "linear-gradient(#c7c2ff 1px, transparent 1px), linear-gradient(90deg, #c7c2ff 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+
+      {/* HEADER */}
+      <motion.header
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 120, damping: 20 }}
+        className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-white/60 shadow-sm"
+      >
         <div className="max-w-5xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center mb-3">
-            <button
-              onClick={() => window.close()}
-              className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 
-                        border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              ← Back
-            </button>
-
-            <div className="text-right">
-              <h1 className="text-xl font-bold text-blue-700">
-                {testData.subject} Test
-              </h1>
-              <p className="text-sm text-gray-600 font-medium">{testData.chapter}</p>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center pt-3 border-t-2 border-gray-200">
-            <div className="flex items-center gap-4">
-              <div className={`px-5 py-2 rounded-lg border-3 font-bold ${
-                timeRemaining < 60 ? 'border-red-500 bg-red-50 text-red-700' : 
-                timeRemaining < 300 ? 'border-orange-500 bg-orange-50 text-orange-700' : 
-                'border-green-500 bg-green-50 text-green-700'
-              }`}>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  <span className="text-2xl font-mono">
-                    {formatTime(timeRemaining)}
-                  </span>
-                </div>
+          <div className="flex items-center justify-between gap-4">
+            {/* Left: Back + Title */}
+            <div className="flex items-center gap-4 min-w-0">
+              <motion.button
+                whileHover={{ x: -3 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => window.close()}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors shrink-0"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </motion.button>
+              <div className="min-w-0">
+                <h1 className="text-base font-extrabold text-gray-900 truncate" style={{ fontFamily: "'Syne', sans-serif" }}>
+                  {testData.subject}
+                </h1>
+                <p className="text-xs text-gray-400 font-medium truncate">{testData.chapter}</p>
               </div>
-
-              <span className="text-base font-semibold text-gray-700">
-                ⏱️ {testData.duration} minutes
-              </span>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
+            {/* Center: Timer */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-2xl border-2 font-mono font-bold text-lg ${timerColor.bg} ${timerColor.border} ${timerColor.text} shrink-0`}
+            >
+              <Clock className="w-4 h-4" />
+              <span>{formatTime(timeRemaining)}</span>
+            </motion.div>
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2 shrink-0">
+              <motion.button
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={downloadAsPDF}
                 disabled={isSubmitted || isTimeUp}
-                className="px-5 py-2.5 text-sm font-bold bg-blue-600 text-white rounded-lg 
-                          hover:bg-blue-700 disabled:bg-gray-400 transition-colors
-                          flex items-center gap-2 shadow-md"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold 
+                           bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200
+                           disabled:opacity-40 transition-all"
               >
                 <Download className="w-4 h-4" />
-                Download PDF
-              </button>
+                PDF
+              </motion.button>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={handleSubmit}
                 disabled={isSubmitted || isTimeUp}
-                className="px-5 py-2.5 text-sm font-bold bg-green-600 text-white rounded-lg 
-                          hover:bg-green-700 disabled:bg-gray-400 transition-colors
-                          flex items-center gap-2 shadow-md"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold
+                           bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-md shadow-indigo-200
+                           hover:shadow-lg hover:shadow-indigo-300 disabled:opacity-40 transition-all"
               >
                 <CheckCircle className="w-4 h-4" />
-                {isSubmitted ? "✓ Submitted" : "Submit Test"}
-              </button>
+                {isSubmitted ? "Submitted ✓" : "Submit"}
+              </motion.button>
             </div>
           </div>
+
+          {/* Timer progress bar */}
+          <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
+            <motion.div
+              className={`h-full rounded-full ${
+                timeRemaining < 60 ? "bg-red-400" : timeRemaining < 300 ? "bg-orange-400" : "bg-indigo-400"
+              }`}
+              animate={{ width: `${progressPercent}%` }}
+              transition={{ duration: 1, ease: "linear" }}
+            />
+          </div>
         </div>
-      </div>
+      </motion.header>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <div
+      {/* CONTENT */}
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
           id="test-content"
-          className="bg-white shadow-xl rounded-lg border-2 border-gray-300 p-10"
-          style={{ minHeight: '297mm' }}
+          className="bg-white rounded-3xl shadow-xl shadow-indigo-100/50 border border-white overflow-hidden"
+          style={{ minHeight: "297mm" }}
         >
-          {/* Header */}
-          <div className="mb-8 pb-6 border-b-3 border-blue-600">
-            <div className="text-center mb-6">
-              <div className="text-sm uppercase tracking-wider text-blue-600 font-bold mb-2">
-                📝 Class 6 Test Paper
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                {testData.subject}
-              </h1>
-              <h2 className="text-2xl text-gray-700 font-semibold">
-                {testData.chapter}
-              </h2>
-            </div>
+          {/* Paper header */}
+          <div className="bg-gradient-to-r from-indigo-500 to-violet-600 px-10 py-8 text-white">
+            <p className="text-indigo-200 text-xs font-semibold uppercase tracking-widest mb-2">
+              📝 Test Paper
+            </p>
+            <h1 className="text-3xl font-extrabold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>
+              {testData.subject}
+            </h1>
+            <p className="text-indigo-100 font-medium text-base">{testData.chapter}</p>
+          </div>
 
-            {/* Student Info */}
-            <div className="border-2 border-blue-300 bg-blue-50 rounded-lg p-5 mb-5">
-              <div className="grid grid-cols-2 gap-4 text-base">
-                <div className="flex items-center">
-                  <span className="font-bold text-gray-800">Name:</span>
-                  <span className="ml-2 border-b-2 border-dotted border-gray-500 flex-1 h-6"></span>
+          <div className="px-10 py-8">
+            {/* Student info */}
+            <div className="grid grid-cols-2 gap-4 mb-6 p-5 bg-gray-50 rounded-2xl border border-dashed border-indigo-200">
+              {[
+                { label: "Name", value: null },
+                { label: "Roll No", value: null },
+                { label: "Date", value: new Date().toLocaleDateString() },
+                { label: "Duration", value: `${testData.duration} minutes` },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex items-center gap-2 text-sm">
+                  <span className="font-bold text-gray-700 w-16 shrink-0">{label}:</span>
+                  {value ? (
+                    <span className="font-semibold text-gray-600">{value}</span>
+                  ) : (
+                    <span className="flex-1 border-b border-dotted border-gray-400 h-5" />
+                  )}
                 </div>
-                <div className="flex items-center">
-                  <span className="font-bold text-gray-800">Roll No:</span>
-                  <span className="ml-2 border-b-2 border-dotted border-gray-500 flex-1 h-6"></span>
-                </div>
-                <div className="flex items-center">
-                  <span className="font-bold text-gray-800">Date:</span>
-                  <span className="ml-2 font-semibold text-gray-700">{new Date().toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="font-bold text-gray-800">Time:</span>
-                  <span className="ml-2 font-semibold text-gray-700">{testData.duration} minutes</span>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Instructions */}
-            <div className="border-2 border-yellow-400 bg-yellow-50 rounded-lg p-5">
-              <p className="font-bold text-gray-900 text-lg mb-3 flex items-center gap-2">
-                📋 Instructions - Please Read Carefully!
+            <div className="mb-8 p-5 bg-amber-50 rounded-2xl border border-amber-200">
+              <p className="font-bold text-gray-800 text-sm mb-3 flex items-center gap-2">
+                📋 Instructions
               </p>
-              <ul className="space-y-2 text-base text-gray-800">
-                <li className="flex items-start gap-2">
-                  <span className="text-yellow-600 font-bold text-lg">1.</span>
-                  <span className="font-medium">Read all questions carefully before you start writing.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-yellow-600 font-bold text-lg">2.</span>
-                  <span className="font-medium">Write your answers in clear, neat handwriting.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-yellow-600 font-bold text-lg">3.</span>
-                  <span className="font-medium">Show all your working and steps for math problems.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-yellow-600 font-bold text-lg">4.</span>
-                  <span className="font-medium">Check the marks for each question - spend time wisely!</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-yellow-600 font-bold text-lg">5.</span>
-                  <span className="font-medium">Review your answers before submitting. You can do it! 💪</span>
-                </li>
-              </ul>
+              <ol className="space-y-1.5 text-sm text-gray-600 font-medium list-decimal list-inside">
+                <li>Read all questions carefully before you start.</li>
+                <li>Write your answers in clear, neat handwriting.</li>
+                <li>Show all working and steps for math problems.</li>
+                <li>Note marks per question — manage your time wisely.</li>
+                <li>Review your answers before submitting. You've got this! 💪</li>
+              </ol>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="flex-1 h-px bg-gradient-to-r from-indigo-200 to-transparent" />
+              <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Questions</span>
+              <div className="flex-1 h-px bg-gradient-to-l from-indigo-200 to-transparent" />
+            </div>
+
+            {/* Questions */}
+            <div
+              className="prose-test"
+              dangerouslySetInnerHTML={{ __html: marked.parse(testData.paper || "") }}
+            />
+
+            {/* Answer reminder */}
+            <div className="mt-10 p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-center">
+              <p className="text-emerald-700 font-semibold text-sm">
+                ✍️ Leave adequate space between your answers
+              </p>
+            </div>
+
+            {/* Footer */}
+            <div className="mt-10 pt-6 border-t border-dashed border-gray-200 text-center">
+              <p className="text-gray-400 font-semibold text-sm">🎓 End of Question Paper</p>
+              <p className="text-gray-300 text-xs mt-1">Best of luck — do your best! 🌟</p>
             </div>
           </div>
-
-          {/* Questions */}
-          <div
-            className="prose prose-lg max-w-none
-                        prose-headings:font-bold prose-headings:text-gray-900 prose-headings:mb-4 prose-headings:mt-8
-                        prose-h3:text-2xl prose-h3:bg-blue-100 prose-h3:px-4 prose-h3:py-2 prose-h3:rounded-lg prose-h3:border-l-4 prose-h3:border-blue-600
-                        prose-p:text-gray-800 prose-p:leading-relaxed prose-p:text-lg prose-p:mb-6
-                        prose-strong:text-blue-700 prose-strong:font-bold prose-strong:text-lg
-                        prose-li:text-gray-800 prose-li:mb-4 prose-li:text-lg prose-li:leading-relaxed
-                        prose-ol:space-y-6
-                        prose-ul:space-y-3"
-            dangerouslySetInnerHTML={{
-              __html: marked.parse(testData.paper || ""),
-            }}
-          />
-
-          {/* Answer Space Reminder */}
-          <div className="mt-10 p-4 bg-green-50 border-2 border-green-400 rounded-lg">
-            <p className="text-center text-green-800 font-bold text-lg">
-              ✍️ Remember to leave proper space between your answers!
-            </p>
-          </div>
-
-          {/* Footer */}
-          <div className="mt-12 pt-6 border-t-2 border-gray-400 text-center">
-            <p className="text-gray-600 font-semibold text-lg">🎓 End of Question Paper</p>
-            <p className="text-gray-500 text-sm mt-2">Best of Luck! Do Your Best! 🌟</p>
-          </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Time Up Modal */}
+      {/* TIME UP MODAL */}
       <AnimatePresence>
         {isTimeUp && !isSubmitted && (
-          <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-6">
-            <div className="bg-white rounded-2xl p-10 max-w-md w-full text-center shadow-2xl border-4 border-red-500">
-              <AlertCircle className="w-20 h-20 text-red-600 mx-auto mb-4" />
-              
-              <h2 className="text-4xl font-bold text-red-600 mb-4">
-                ⏰ Time's Up!
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.88, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.88, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 120, damping: 18 }}
+              className="bg-white rounded-3xl p-10 max-w-sm w-full text-center shadow-2xl border border-red-100"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-5">
+                <AlertCircle className="w-9 h-9 text-red-500" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-gray-900 mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>
+                Time's Up!
               </h2>
-              <p className="text-gray-700 text-lg mb-6 font-medium">
-                Great job! Your time has ended. Please submit your test paper now.
+              <p className="text-gray-500 text-sm font-medium mb-8">
+                Great effort! Your time has ended. Submit your test paper now.
               </p>
-
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={handleSubmit}
-                className="w-full px-6 py-4 bg-red-600 text-white font-bold text-lg rounded-xl 
-                          hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-lg"
+                className="w-full py-3.5 rounded-2xl text-white font-bold text-sm
+                           bg-gradient-to-r from-red-500 to-pink-500
+                           shadow-lg shadow-red-200 hover:shadow-xl transition-all flex items-center justify-center gap-2"
               >
-                <CheckCircle className="w-6 h-6" />
+                <CheckCircle className="w-5 h-5" />
                 Submit Test Paper
-              </button>
-            </div>
-          </div>
+              </motion.button>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Success Modal */}
+      {/* SUCCESS MODAL */}
       <AnimatePresence>
         {isSubmitted && (
-          <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-6">
-            <div className="bg-white rounded-2xl p-10 max-w-md w-full text-center shadow-2xl border-4 border-green-500">
-              <CheckCircle className="w-20 h-20 text-green-600 mx-auto mb-4" />
-              
-              <h2 className="text-4xl font-bold text-green-600 mb-4">
-                🎉 Well Done!
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.88, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.88, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 120, damping: 18 }}
+              className="bg-white rounded-3xl p-10 max-w-sm w-full text-center shadow-2xl border border-emerald-100"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
+                className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto mb-5"
+              >
+                <CheckCircle className="w-9 h-9 text-emerald-500" />
+              </motion.div>
+              <h2 className="text-2xl font-extrabold text-gray-900 mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>
+                Well Done! 🎉
               </h2>
-              <p className="text-gray-700 text-lg mb-6 font-medium">
-                Your test has been submitted successfully! Your PDF is downloading now.
+              <p className="text-gray-500 text-sm font-medium mb-8">
+                Test submitted successfully! Your PDF is downloading now.
               </p>
-
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => window.close()}
-                className="w-full px-6 py-4 bg-blue-600 text-white font-bold text-lg rounded-xl 
-                          hover:bg-blue-700 transition-colors shadow-lg"
+                className="w-full py-3.5 rounded-2xl text-white font-bold text-sm
+                           bg-gradient-to-r from-indigo-500 to-violet-600
+                           shadow-lg shadow-indigo-200 hover:shadow-xl transition-all"
               >
                 Close Window
-              </button>
-            </div>
-          </div>
+              </motion.button>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
